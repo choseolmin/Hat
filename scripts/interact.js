@@ -1,7 +1,7 @@
 const hre = require("hardhat");
 
 async function main() {
-  const address = "0x160333145E1063ea9a66C43e1C840737181C7beC"; // 새 컨트랙트 주소
+  const address = "0x160333145E1063ea9a66C43e1C840737181C7beC"; 
   const MessageBoard = await hre.ethers.getContractAt("MessageBoard", address);
 
   // postMessage 함수 호출 (트랜잭션)
