@@ -1,19 +1,19 @@
 const hre = require("hardhat");
 
 async function main() {
-  const address = "0x01488C3403992Bb9E99D0ffba2FE10FF6f678071"; // 배포된 컨트랙트 주소
+  const address = "0x160333145E1063ea9a66C43e1C840737181C7beC"; // 새 컨트랙트 주소
   const MessageBoard = await hre.ethers.getContractAt("MessageBoard", address);
 
-  // setMessage 함수 호출 (트랜잭션)
-  const tx = await MessageBoard.setMessage("Hello, blockchain!");
+  // postMessage 함수 호출 (트랜잭션)
+  const tx = await MessageBoard.postMessage("테스트 제목", "테스트 내용");
   await tx.wait();
   console.log("메시지 저장 완료!");
 
-  // getMessage 함수 호출 (조회)
+  // getMessages 함수 호출 (조회)
   const signer = await hre.ethers.provider.getSigner();
   const myAddress = await signer.getAddress();
-  const message = await MessageBoard.getMessage(myAddress);
-  console.log(`내 메시지: ${message}`);
+  const messages = await MessageBoard.getMessages(myAddress);
+  console.log("내 메시지 목록:", messages);
 }
 
 main().catch(console.error); 

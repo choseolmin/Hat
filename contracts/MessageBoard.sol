@@ -2,16 +2,43 @@
 pragma solidity ^0.8.20;
 
 contract MessageBoard {
-    mapping(address => string) private messages;
-
-    event MessageUpdated(address indexed user, string newMessage);
-
-    function setMessage(string memory _message) public {
-        messages[msg.sender] = _message;
-        emit MessageUpdated(msg.sender, _message);
+    struct Message {
+        string title;
+        string body;
+        uint256 timestamp;
+        Status status;
     }
 
-    function getMessage(address _user) public view returns (string memory) {
-        return messages[_user];
+    enum Status { ACTIVE, ARCHIVED }
+
+    mapping(address => Message[]) private userMessages;
+
+    event MessagePosted(address indexed user, string title, string body);
+    event MessageArchived(address indexed user, uint256 index);
+
+    function postMessage(string memory _title, string memory _body) public {
+        Message memory newMsg = Message({
+            title: _title,
+            body: _body,
+            timestamp: block.timestamp,
+            status: Status.ACTIVE
+        });
+
+        userMessages[msg.sender].push(newMsg);
+        emit MessagePosted(msg.sender, _title, _body);
+    }
+
+    function archiveMessage(uint256 index) public {
+        require(index < userMessages[msg.sender].length, "Invalid index");
+        userMessages[msg.sender][index].status = Status.ARCHIVED;
+        emit MessageArchived(msg.sender, index);
+    }
+
+    function getMessages(address _user) public view returns (Message[] memory) {
+        return userMessages[_user];
+    }
+
+    function getMessageCount(address _user) public view returns (uint256) {
+        return userMessages[_user].length;
     }
 }
