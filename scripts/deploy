@@ -4,10 +4,9 @@ async function main() {
   const MessageBoard = await hre.ethers.getContractFactory("MessageBoard");
   const messageBoard = await MessageBoard.deploy();
 
-  await messageBoard.waitForDeployment();
+  await messageBoard.deployed();
 
-  const address = await messageBoard.getAddress();
-  console.log(`✅ MessageBoard deployed to: ${address}`);
+  console.log(`✅ MessageBoard deployed to: ${messageBoard.address}`);
 }
 
 main().catch((error) => {
